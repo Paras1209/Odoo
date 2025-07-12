@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import '../styles/rewear.css';
 
 const Dashboard = () => {
   const { user } = useAuth();

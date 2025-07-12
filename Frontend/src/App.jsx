@@ -7,6 +7,8 @@ import ItemDetail from './pages/ItemDetail';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import EditItem from './pages/EditItem';
+import BrowseItems from './pages/BrowseItems';
+import AdminPanel from './pages/AdminPanel';
 
 function App() {
   return (
@@ -14,14 +16,14 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/browse" element={<BrowseItems />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/add-item" element={<AddItem />} />
         <Route path="/item/:id" element={<ItemDetail />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/add-item" element={<AddItem />} />
-        <Route path="/item/:itemId" element={<ItemDetail />} />
         <Route path="/edit/:itemId" element={<EditItem />} />
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </>
   );
