@@ -1,0 +1,118 @@
+/* Dashboard.css */
+
+.dashboard-container {
+  padding: 3rem 2rem;
+  max-width: 50vw;
+  margin: 50px auto;
+  font-family: 'Segoe UI', sans-serif;
+  color: #ffffff;
+  min-height: 60vh;
+  border:  1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-container h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.profile-section {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.profile-section p {
+  margin: 0.5rem 0;
+}
+
+.item-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.item-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  padding: 1rem;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.item-card:hover {
+  transform: translateY(-5px);
+}
+
+.item-card img {
+  max-width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 0.5rem;
+}
+
+.item-card h4 {
+  margin: 0.5rem 0;
+  color: #fff;
+}
+
+.item-card p {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.edit-btn,
+.delete-btn {
+  display: inline-block;
+  margin: 0.3rem 0.4rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.edit-btn {
+  background-color: #00c6ff;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #009ad8;
+}
+
+.delete-btn {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #cc0000;
+}
+
+.swap-requests-container {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.2rem;
+}
+
+.swap-card {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1rem;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+}
+
+.swap-card p {
+  margin: 0.4rem 0;
+  font-size: 0.9rem;
+}

@@ -1,0 +1,46 @@
+/* LandingPage.css */
+
+.landing-container {
+  padding: 3rem 2rem;
+  text-align: center;
+  min-height: 100vh;
+  color: white;
+}
+
+.landing-container h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+  text-shadow: 1px 1px 10px rgba(255, 255, 255, 0.2);
+}
+
+.landing-container p {
+  font-size: 1.2rem;
+  color: #e0e0e0;
+  margin-bottom: 2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.cta-buttons button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cta-buttons button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}

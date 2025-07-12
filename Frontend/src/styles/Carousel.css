@@ -4,9 +4,19 @@
 }
 
 .carousel-title {
-  color: white;
-  font-size: 2rem;
-  margin-bottom: 1rem;
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Hide scrollbar for carousel */
+.carousel {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.carousel::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .carousel {
