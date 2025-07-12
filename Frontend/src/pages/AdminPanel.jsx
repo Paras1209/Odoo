@@ -1,279 +1,161 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import '../styles/rewear.css';
 
 const AdminPanel = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [pendingItems, setPendingItems] = useState([]);
-  const [allItems, setAllItems] = useState([]);
+  const [activeTab, setActiveTab] = useState('users');
   const [users, setUsers] = useState([]);
-  const [activeTab, setActiveTab] = useState('pending');
-
-  // Check if user is admin (in real app, this would be checked on backend)
-  const isAdmin = user && user.email === 'admin@rewear.com';
+  const [orders, setOrders] = useState([]);
+  const [listings, setListings] = useState([]);
 
   useEffect(() => {
-    if (!isAdmin) {
-      navigate('/');
-      return;
+    // Simulate loading data
+    const mockUsers = [
+      { id: 1, name: 'Alice Johnson', email: 'alice@example.com', points: 120, status: 'active', joinDate: '2023-06-15' },
+      { id: 2, name: 'Bob Smith', email: 'bob@example.com', points: 85, status: 'active', joinDate: '2023-07-20' },
+      { id: 3, name: 'Carol Davis', email: 'carol@example.com', points: 150, status: 'active', joinDate: '2023-08-10' },
+      { id: 4, name: 'Dave Wilson', email: 'dave@example.com', points: 60, status: 'inactive', joinDate: '2023-09-05' }
+    ];
+    
+    const mockOrders = [
+      { id: 1, buyer: 'Alice Johnson', seller: 'Carol Davis', item: 'Vintage Denim Jacket', points: 45, status: 'completed', date: '2024-01-15' },
+      { id: 2, buyer: 'Bob Smith', seller: 'Dave Wilson', item: 'Designer Handbag', points: 80, status: 'shipped', date: '2024-01-20' },
+      { id: 3, buyer: 'Carol Davis', seller: 'Alice Johnson', item: 'Wool Sweater', points: 35, status: 'pending', date: '2024-01-25' }
+    ];
+    
+    const mockListings = [
+      { id: 1, title: 'Vintage Denim Jacket', seller: 'Alice Johnson', points: 45, status: 'active', date: '2024-01-10' },
+      { id: 2, title: 'Designer Handbag', seller: 'Bob Smith', points: 80, status: 'active', date: '2024-01-12' },
+      { id: 3, title: 'Wool Sweater', seller: 'Carol Davis', points: 35, status: 'active', date: '2024-01-14' }
+    ];
+    
+    setUsers(mockUsers);
+    setOrders(mockOrders);
+    setListings(mockListings);
+  }, []);
+
+  const getInitials = (name) => {
+    return name.split(' ').map(n => n[0]).join('');
+  };
+
+  const getStatusClass = (status) => {
+    switch(status) {
+      case 'active': return 'status-active';
+      case 'pending': return 'status-pending';
+      case 'completed': return 'status-completed';
+      case 'shipped': return 'status-shipped';
+      default: return '';
     }
-
-    // Load items and users data
-    const items = JSON.parse(localStorage.getItem('rewear_items')) || [];
-    const allUsers = JSON.parse(localStorage.getItem('rewear_users')) || [];
-    
-    // Filter pending items (in real app, items would have approval status)
-    const pending = items.filter(item => item.status === 'pending');
-    
-    setPendingItems(pending);
-    setAllItems(items);
-    setUsers(allUsers);
-  }, [isAdmin, navigate]);
-
-  const approveItem = (itemIndex) => {
-    const items = JSON.parse(localStorage.getItem('rewear_items')) || [];
-    items[itemIndex].status = 'approved';
-    localStorage.setItem('rewear_items', JSON.stringify(items));
-    
-    // Update state
-    setPendingItems(prev => prev.filter((_, index) => index !== itemIndex));
-    setAllItems(items);
-    
-    alert('Item approved successfully!');
   };
 
-  const rejectItem = (itemIndex) => {
-    const reason = prompt('Reason for rejection:');
-    if (!reason) return;
-    
-    const items = JSON.parse(localStorage.getItem('rewear_items')) || [];
-    items[itemIndex].status = 'rejected';
-    items[itemIndex].rejectionReason = reason;
-    localStorage.setItem('rewear_items', JSON.stringify(items));
-    
-    // Update state
-    setPendingItems(prev => prev.filter((_, index) => index !== itemIndex));
-    setAllItems(items);
-    
-    alert('Item rejected.');
-  };
+  const renderUsersTab = () => (
+    <div className="users-grid">
+      {users.map((user) => (
+        <div key={user.id} className="user-card">
+          <div className="user-avatar">
+            {getInitials(user.name)}
+          </div>
+          <div className="user-details">
+            <h4>{user.name}</h4>
+            <div className="user-info-grid">
+              <span>Email: {user.email}</span>
+              <span>Points: {user.points}</span>
+              <span>Status: <span className={getStatusClass(user.status)}>{user.status}</span></span>
+              <span>Joined: {new Date(user.joinDate).toLocaleDateString()}</span>
+            </div>
+          </div>
+          <div className="user-actions">
+            <button className="action-btn action-1">View Profile</button>
+            <button className="action-btn action-2">Send Message</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
-  const removeItem = (itemIndex) => {
-    const confirmRemove = window.confirm('Are you sure you want to permanently remove this item?');
-    if (!confirmRemove) return;
-    
-    const items = JSON.parse(localStorage.getItem('rewear_items')) || [];
-    items.splice(itemIndex, 1);
-    localStorage.setItem('rewear_items', JSON.stringify(items));
-    
-    setAllItems(items);
-    alert('Item removed successfully!');
-  };
+  const renderOrdersTab = () => (
+    <div className="orders-grid">
+      {orders.map((order) => (
+        <div key={order.id} className="order-card">
+          <div className="order-avatar">
+            {getInitials(order.buyer)}
+          </div>
+          <div className="order-details">
+            <h4>Order #{order.id}</h4>
+            <div className="order-info-grid">
+              <span>Item: {order.item}</span>
+              <span>Buyer: {order.buyer}</span>
+              <span>Seller: {order.seller}</span>
+              <span>Points: {order.points}</span>
+              <span>Status: <span className={getStatusClass(order.status)}>{order.status}</span></span>
+              <span>Date: {new Date(order.date).toLocaleDateString()}</span>
+            </div>
+          </div>
+          <div className="order-actions">
+            <button className="action-btn action-1">View Details</button>
+            <button className="action-btn action-2">Track Order</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
-  const banUser = (userEmail) => {
-    const confirmBan = window.confirm(`Are you sure you want to ban ${userEmail}?`);
-    if (!confirmBan) return;
-    
-    // TODO: Implement user banning logic
-    alert(`User ${userEmail} has been banned.`);
-  };
-
-  if (!isAdmin) {
-    return (
-      <div className="admin-access-denied">
-        <h2>Access Denied</h2>
-        <p>You don't have permission to access the admin panel.</p>
-      </div>
-    );
-  }
+  const renderListingsTab = () => (
+    <div className="listings-grid">
+      {listings.map((listing) => (
+        <div key={listing.id} className="listing-card">
+          <div className="listing-avatar">
+            <img src={`https://picsum.photos/60/60?random=${listing.id}`} alt={listing.title} />
+          </div>
+          <div className="listing-details">
+            <h4>{listing.title}</h4>
+            <div className="listing-info-grid">
+              <span>Seller: {listing.seller}</span>
+              <span>Points: {listing.points}</span>
+              <span>Status: <span className={getStatusClass(listing.status)}>{listing.status}</span></span>
+              <span>Listed: {new Date(listing.date).toLocaleDateString()}</span>
+            </div>
+          </div>
+          <div className="listing-actions">
+            <button className="action-btn action-1">View Item</button>
+            <button className="action-btn action-2">Edit Listing</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="admin-panel">
       <div className="admin-header">
         <h1>Admin Panel</h1>
-        <p>Moderate items and manage the ReWear platform</p>
+        <p>Manage users, orders, and listings</p>
       </div>
-
+      
       <div className="admin-tabs">
-        <button 
-          className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`}
-          onClick={() => setActiveTab('pending')}
-        >
-          Pending Items ({pendingItems.length})
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'all-items' ? 'active' : ''}`}
-          onClick={() => setActiveTab('all-items')}
-        >
-          All Items ({allItems.length})
-        </button>
         <button 
           className={`tab-button ${activeTab === 'users' ? 'active' : ''}`}
           onClick={() => setActiveTab('users')}
         >
-          Users ({users.length})
+          Users
         </button>
         <button 
-          className={`tab-button ${activeTab === 'analytics' ? 'active' : ''}`}
-          onClick={() => setActiveTab('analytics')}
+          className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`}
+          onClick={() => setActiveTab('orders')}
         >
-          Analytics
+          Orders
+        </button>
+        <button 
+          className={`tab-button ${activeTab === 'listings' ? 'active' : ''}`}
+          onClick={() => setActiveTab('listings')}
+        >
+          Listings
         </button>
       </div>
-
+      
       <div className="admin-content">
-        {activeTab === 'pending' && (
-          <div className="pending-items">
-            <h2>Pending Item Approvals</h2>
-            {pendingItems.length === 0 ? (
-              <div className="no-pending">
-                <p>No items pending approval</p>
-              </div>
-            ) : (
-              <div className="items-grid">
-                {pendingItems.map((item, index) => (
-                  <div key={index} className="admin-item-card">
-                    <img src={item.images[0]} alt={item.title} />
-                    <div className="admin-item-info">
-                      <h3>{item.title}</h3>
-                      <p><strong>Category:</strong> {item.category}</p>
-                      <p><strong>Condition:</strong> {item.condition}</p>
-                      <p><strong>Uploader:</strong> {item.uploader}</p>
-                      <p><strong>Description:</strong> {item.description}</p>
-                      <div className="admin-actions">
-                        <button 
-                          className="btn btn-primary btn-sm"
-                          onClick={() => approveItem(index)}
-                        >
-                          ✓ Approve
-                        </button>
-                        <button 
-                          className="btn btn-secondary btn-sm"
-                          onClick={() => rejectItem(index)}
-                        >
-                          ✗ Reject
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'all-items' && (
-          <div className="all-items">
-            <h2>All Items Management</h2>
-            <div className="items-grid">
-              {allItems.map((item, index) => (
-                <div key={index} className="admin-item-card">
-                  <img src={item.images[0]} alt={item.title} />
-                  <div className="admin-item-info">
-                    <h3>{item.title}</h3>
-                    <p><strong>Status:</strong> 
-                      <span className={`status-badge status-${item.status || 'available'}`}>
-                        {item.status || 'Available'}
-                      </span>
-                    </p>
-                    <p><strong>Uploader:</strong> {item.uploader}</p>
-                    <p><strong>Upload Date:</strong> {item.uploadDate || 'N/A'}</p>
-                    <div className="admin-actions">
-                      <button 
-                        className="btn btn-outline btn-sm"
-                        onClick={() => removeItem(index)}
-                      >
-                        🗑️ Remove
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'users' && (
-          <div className="users-management">
-            <h2>User Management</h2>
-            <div className="users-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Email</th>
-                    <th>Join Date</th>
-                    <th>Items Listed</th>
-                    <th>Points</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user, index) => (
-                    <tr key={index}>
-                      <td>{user.email}</td>
-                      <td>{user.joinDate || 'N/A'}</td>
-                      <td>{allItems.filter(item => item.uploader === user.email).length}</td>
-                      <td>{user.points || 100}</td>
-                      <td>
-                        <button 
-                          className="btn btn-secondary btn-sm"
-                          onClick={() => banUser(user.email)}
-                        >
-                          Ban User
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'analytics' && (
-          <div className="analytics">
-            <h2>Platform Analytics</h2>
-            <div className="analytics-grid">
-              <div className="analytics-card">
-                <h3>Total Items</h3>
-                <div className="analytics-number">{allItems.length}</div>
-              </div>
-              <div className="analytics-card">
-                <h3>Total Users</h3>
-                <div className="analytics-number">{users.length}</div>
-              </div>
-              <div className="analytics-card">
-                <h3>Pending Approvals</h3>
-                <div className="analytics-number">{pendingItems.length}</div>
-              </div>
-              <div className="analytics-card">
-                <h3>Active Swaps</h3>
-                <div className="analytics-number">
-                  {JSON.parse(localStorage.getItem('rewear_swaps') || '[]').length}
-                </div>
-              </div>
-            </div>
-            
-            <div className="category-breakdown">
-              <h3>Items by Category</h3>
-              <div className="category-stats">
-                {Object.entries(
-                  allItems.reduce((acc, item) => {
-                    acc[item.category] = (acc[item.category] || 0) + 1;
-                    return acc;
-                  }, {})
-                ).map(([category, count]) => (
-                  <div key={category} className="category-stat">
-                    <span className="category-name">{category}</span>
-                    <span className="category-count">{count}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+        {activeTab === 'users' && renderUsersTab()}
+        {activeTab === 'orders' && renderOrdersTab()}
+        {activeTab === 'listings' && renderListingsTab()}
       </div>
     </div>
   );
